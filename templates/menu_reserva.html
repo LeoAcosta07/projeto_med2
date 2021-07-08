@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Catálogo da Blue - HTML, CSS, JS, PYTHON E SQL</title>
+    <link rel="stylesheet" href="/static/estilo.css" />
+
+</head>
+    <body>
+        {% include 'header.html' %}
+        <div class="bloco_m">
+            <h2> Escolha uma opçao </h2>
+        </div>
+        <br>
+        <div class="bloco">
+            <a href="/menu_reserva/nova_reserva" class="botao" >Nova</a>
+        </div>
+        <br>
+        <div class="bloco">
+            <a href="/menu_reserva/alterar_reserva" class="botao" >Alterar</a>
+        </div>
+        <br>
+        <div class="bloco">
+            <a href="/menu_reserva/apagar_reserva" class="botao" >Apagar</a>
+        </div>
+        <br>
+        <div class="bloco">
+            <a href="/menu_reserva/consultar_reserva/" class="botao" >Consultar</a>
+        </div>
+        <br>
+        <div class="bloco">
+            <a href="/menu_recep" class="botao_v" >Voltar</a>
+        </div>
+</body>
+</html>

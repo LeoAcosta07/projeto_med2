@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Catálogo da Blue - HTML, CSS, JS, PYTHON E SQL</title>
+    <link rel="stylesheet" href="/static/estilo.css" />
+
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <div style= "color:#008E9D" class="bloco">
+        <h2>Visualizar Recervas</h2>    
+    </div>
+
+
+    <div class="bloco">
+        <table class="tabela">
+            <tr style= "color:#008E9D" class="tabela_header">
+                <td>ID de reserba</td>
+                <td>Chack in</td>
+                <td>Check out</td>
+                <td>Id de Cliente</td>
+                <td>Cliente</td>
+
+            </tr>
+            {% for registros in registros %}
+
+            <tr>
+                <td>{{ registros["num_res"] }}</td>
+                <td>{{ registros["data_in"] }}</td>
+                <td>{{ registros["data_ou"] }}</td>
+                <td>{{ registros["id_cliente"] }}</td>
+                <td>{{ registros["nom_cliente"] }}</td>
+
+                <td><a href="/menu_recep" class="botao_v" >Voltar</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

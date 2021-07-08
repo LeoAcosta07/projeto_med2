@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Catálogo da Blue - HTML, CSS, JS, PYTHON E SQL</title>
+    <link rel="stylesheet" href="/static/estilo.css" />
+
+</head>
+    <body>
+        {% include 'header.html' %}
+        <h1 class="bloco">Alterar data da Reserva!</h1>
+        <form action="" method="POST">
+            <label for="data_in">Data de Check-in:</label>
+            <input type="date" name="data_in" id="data_in"> <br><br>
+            <label for="data_out">Data de Check-out:</label>
+            <input type="date" name="data_out" id="data_out"><br> <br>
+            <input class="botao" type="submit" value="Enviar Dados">
+        </form>
+        <div class="bloco">
+            <a href="/menu_recep" class="botao_v" >Voltar</a>
+        </div>
+</body>
+</html>

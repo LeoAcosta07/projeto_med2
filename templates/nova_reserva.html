@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Catálogo da Blue - HTML, CSS, JS, PYTHON E SQL</title>
+    <link rel="stylesheet" href="/static/estilo.css" />
+
+</head>
+    <body>
+        {% include 'header.html' %}
+        <div class="bloco_m">
+            <h2> Criar Nova Reserva </h2>
+        </div>
+    
+        {% if not novo_id %}
+        <br> <br>
+        <div class="bloco">
+            <form class="form" method="POST">
+                <div class="bloco form_input">
+                    <label class="bloco_m" for="num_reserva">Numero de reserva:</label>
+                    <input type="text"  name="num_reserva" id="num_reserva"> 
+                </div>
+                <div class="bloco form_input">
+                    <label class="bloco_m" for="data_in">Data de Check-in:</label>
+                    <input type="date" name="data_in" id="data_in"><br><br>
+                </div>
+                <div class="bloco form_input">
+                    <label class="bloco_m" for="data_out">Data de Check-out:</label>
+                    <input type="date" name="data_out" id="data_out"><br> <br>
+                </div><br><br>
+                <div class="bloco form_input">
+                    <label class="bloco_m" for="id_habitacao">Numero de habitacao:</label>
+                    <input type="text"  name="id_habitacao" id="id_habitacao"> 
+                </div>
+                <div class="bloco form_input">
+                    <label class="bloco_m" for="id_cliente">Id de cliente:</label>
+                    <input type="text"  name="id_cliente" id="id_cliente"> 
+                </div><br><br><br>
+
+                <div class="bloco form_input">
+                    <input type="submit" class="botao" value="Enviar">
+                </div>
+                
+            </form>
+        </div>
+        <div class="bloco">
+            <a href="/menu_recep" class="botao_v" >Voltar</a>
+        </div>
+    
+        {% else %}
+    
+        <div class="bloco">
+            <p>
+                Reserva cadastrada com sucesso!<br /><br/>
+                A reserva registrada foi a <span class="novo_id">{{ novo_id }}</span>, com a data de check in: <span class="novo_id2">{{ novo_id2 }}</span> e a data de check out: <span class="novo_id3">{{ novo_id3 }}</span><br /><br />
+                <a href="/menu_recep" class="botao_v" >Voltar</a>
+            </p>
+        </div>
+    
+        {% endif %}
+</body>
+</html>

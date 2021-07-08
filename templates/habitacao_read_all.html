@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Catálogo da Blue - HTML, CSS, JS, PYTHON E SQL</title>
+    <link rel="stylesheet" href="/static/estilo.css" />
+
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <div style= "color:#008E9D" class="bloco">
+        <h2>Visualizar Quartos disponiveis</h2>    
+    </div>
+
+
+    <div class="bloco">
+        <table class="tabela">
+            <tr style= "color:#008E9D" class="tabela_header">
+                <td>ID</td>
+                <td>Numero</td>
+                <td>Valor</td>
+                <td>Quantidade de pessoas</td>
+                <td>Categoria</td>
+                <td>Estado</td>
+                <td>Id de hotel</td>
+            </tr>
+            {% for registros in registros %}
+
+            <tr>
+                <td>{{ registros["id_hab"] }}</td>
+                <td>{{ registros["numero"] }}</td>
+                <td>{{ registros["valor"] }}</td>
+                <td>{{ registros["capacidade"] }}</td>
+                <td>{{ registros["categoria"] }}</td>
+                <td>{{ registros["estado"] }}</td>
+                <td>{{ registros["id_hotel"] }}</td>
+                <td><a href="/read/{{ registros['id_hotel'] }}" class="botao">Visualizar</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Catálogo da Blue - HTML, CSS, JS, PYTHON E SQL</title>
+    <link rel="stylesheet" href="/static/estilo.css" />
+
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <div class="bloco">
+        <h2>Visualizar todos os registros</h2>    
+    </div>
+
+    <div class="bloco">
+        <table class="tabela">
+            <tr class="tabela_header">
+                <td>ID</td>
+                <td>Nome</td>
+                <td>Imagem</td>
+                <td>Ações</td>
+            </tr>
+
+            {% for registro in registros %}
+            <tr>
+                <td>{{ registro["id_hotel"] }}</td>
+                <td>{{ registro["nome"] }}</td>
+                <td><img src="{{ registro['url_img']}}" alt="{{ registro['nome']}}" width=100 height=200</td>
+                <td><a href="/read/{{ registro['id_hotel'] }}" class="botao">Visualizar</a></td>
+            </tr>
+            {% endfor %}
+
+
+        </table>
+    </div>
+</body>
+</html>
