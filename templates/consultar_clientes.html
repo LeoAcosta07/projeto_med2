@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Catálogo da Blue - HTML, CSS, JS, PYTHON E SQL</title>
+    <link rel="stylesheet" href="/static/estilo.css" />
+
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <div style= "color:#008E9D" class="bloco">
+        <h2>Visualizar Recervas</h2>    
+    </div>
+
+
+    <div class="bloco" method="GET">
+        <table class="tabela">
+            <tr style= "color:#008E9D" class="tabela_header">
+                <td>ID de Cliente</td>
+                <td>Documento</td>
+                <td>Tipo de Doc.</td>
+                <td>Nome</td>
+                <td>Sobrenome</td>
+                <td>Telefone</td>
+                <td>Procedencia</td>
+                <td>Saldo</td>
+
+
+
+            </tr>
+            {% for registros in registros %}
+
+            <tr>
+                <td>{{ registros["id_cliente"] }}</td>
+                <td>{{ registros["documento"] }}</td>
+                <td>{{ registros["tipo"] }}</td>
+                <td>{{ registros["nome"] }}</td>
+                <td>{{ registros["sobrenome"] }}</td>
+                <td>{{ registros["telefone"] }}</td>
+                <td>{{ registros["procedencia"] }}</td>
+                <td>R${{ registros["saldo"] }}</td>
+
+                <td><a href="/menu_recep/{{ registros['id_cliente'] }}" class="botao_v" >Selecionar</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

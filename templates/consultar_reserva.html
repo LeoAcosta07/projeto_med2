@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     
-    <title>Catálogo da Blue - HTML, CSS, JS, PYTHON E SQL</title>
+    <title>Visualizar Recerva</title>
     <link rel="stylesheet" href="/static/estilo.css" />
 
 </head>
@@ -11,30 +11,28 @@
     {% include 'header.html' %}
 
     <div style= "color:#008E9D" class="bloco">
-        <h2>Visualizar Recervas</h2>    
+        <h2>Informação das reservas</h2>    
     </div>
 
 
-    <div class="bloco">
+    <div class="bloco" method="GET">
         <table class="tabela">
             <tr style= "color:#008E9D" class="tabela_header">
-                <td>ID de reserba</td>
+                <td>Numero de reserva</td>
                 <td>Chack in</td>
                 <td>Check out</td>
-                <td>Id de Cliente</td>
-                <td>Cliente</td>
+                <td>Quantidade de dias</td>
+                <td>Nome Cliente</td>
 
             </tr>
             {% for registros in registros %}
-
             <tr>
-                <td>{{ registros["num_res"] }}</td>
+                <td>{{ registros["num_reserva"] }}</td>
                 <td>{{ registros["data_in"] }}</td>
-                <td>{{ registros["data_ou"] }}</td>
-                <td>{{ registros["id_cliente"] }}</td>
-                <td>{{ registros["nom_cliente"] }}</td>
-
-                <td><a href="/menu_recep" class="botao_v" >Voltar</a></td>
+                <td>{{ registros["data_out"] }}</td>
+                <td>{{ registros["diferenca"] }} dias</td>
+                <td>{{ registros["nome"] }}</td>
+                <td><a href="/menu_reserva/{{ registros['num_reserva'] }}" class="botao_v" >Selecionar</a></td>
             </tr>
             {% endfor %}
         </table>

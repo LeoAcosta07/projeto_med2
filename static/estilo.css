@@ -52,6 +52,21 @@ body {
     box-shadow:3px 3px 10px rgba(0, 0, 0, 796);
     width: 100px;
 }
+.botao_r{
+    background-color: #bd310e;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    display: inline-block;
+    padding: 15px;
+    margin: 10px;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow:3px 3px 10px rgba(0, 0, 0, 796);
+    width: 100px;
+}
 
 .botao_v{
     background-color: #F5821F;
@@ -72,6 +87,12 @@ body {
     background-color: #5673ee;
     transition: 0.3s;
 }
+
+.botao_r:hover{
+    background-color: #e71008;
+    transition: 0.3s;
+}
+
 
 .tabela{
     border: 1px solid #a9aaad;
@@ -125,3 +146,4 @@ body {
     text-align: center;
     width: 100%;
 }
+

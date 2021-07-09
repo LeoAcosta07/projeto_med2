@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Visualizar Recerva</title>
+    <link rel="stylesheet" href="/static/estilo.css" />
+
+</head>
+<body>
+    {% include 'header.html' %}
+    
+    <div class="bloco" method="GET">
+        <table class="tabela">
+            <tr style= "color:#008E9D" class="tabela_header">
+                <td>Numero de reserva</td>
+                <td>Chack in</td>
+                <td>Check out</td>
+                <td>Quantidade de dias</td>
+                <td>Nome Cliente</td>
+                <td>Habitação</td>
+
+            </tr>
+            <tr>
+                {% for registro in registro %}
+                <td>{{ registro["num_reserva"] }}</td>
+                <td>{{ registro["data_in"] }}</td>
+                <td>{{ registro["data_out"] }}</td>
+                <td>{{ registro["diferenca"] }} dias</td>
+                <td>{{ registro["nome"] }}</td>
+                <td>{{ registro["id_hab"] }}</td>
+            </tr>
+                
+         </table>
+    </div>
+    <div class="bloco">
+        <a href="/menu_reserva/alterar_reserva/{{ registro['num_reserva'] }}" class="botao">Alterar</a>
+        <a href="/menu_reserva//apagar_reserva/{{ registro['num_reserva'] }}" class="botao_r">Apagar</a>
+        <a href="/menu_reserva/consultar_reserva" class="botao_v">Voltar</a>
+    </div>
+    {% endfor %}
+</body>
+</html>

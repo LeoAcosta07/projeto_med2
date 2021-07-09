@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-import time
+from datetime import datetime, date
+
 
 app = Flask(__name__)
 
@@ -21,6 +22,7 @@ db = SQLAlchemy(app)
 #-----------------------------------------------  Classe Reserva -------------------------------------------------
 
 class Reserva(db.Model):
+    __tablename__= "reserva"
     num_reserva = db.Column(db.Integer, primary_key=True)
     data_in = db.Column(db.Date, nullable=False)
     data_out = db.Column(db.Date, nullable=False)
@@ -33,45 +35,90 @@ class Reserva(db.Model):
         self.id_cliente = id_cliente
     
 
-        @staticmethod
-        def reserva_read_all()():
-
-            # SELECT * from filmes ORDER BY id ASC
-            all_reserva = Reserva.query.order_by(Habitacao.id_hab.asc()).all()
-            output = []
-            for reserva in all_reserva:   
-                salida = {}
-                salida['num_res'] = reserva.num_res
-                salida['numero'] = reserva.Data_in
-                salida['valor'] = reserva.Data_out
-                salida['capacidade'] = reserva.id_cliente
-                output.append(salida)
-            all_cliente = Cliente.
-            return output
+    @staticmethod
+    def reserva_read_all():
+        # SELECT * from filmes ORDER BY id ASC
+        all_reserva = Reserva.query.order_by(Reserva.data_in.asc()).all()
+        output = []
+        for reserva in all_reserva:   
+            salida = {}
+            salida['num_reserva'] = reserva.num_reserva
+            salida['data_in'] = reserva.data_in
+            salida['data_out'] = reserva.data_out
+            salida['diferenca'] = abs((reserva.data_in - reserva.data_out).days)
+            salida['id_cliente'] = reserva.id_cliente
+            salida['nome'] = Cliente.query.get(reserva.id_cliente).nome
+            output.append(salida)
+        return output
     
+    @staticmethod
+    def reserva_id_cliente():
+        # SELECT * from filmes ORDER BY id ASC
+        all_reserva = Reserva.query.order_by(Reserva.data_in.asc()).all()
+        output = []
+        for reserva in all_reserva:   
+            salida = {}
+            salida['id_cliente'] = reserva.id_cliente
+            output.append(salida)
+        return output
+
     @staticmethod
     def delete():
         db.session.delete()
         db.session.commit()
     
     @staticmethod
-    def read_id(numeroReserva):
-        return db.query.get(numeroReserva)
+    def consultar_reserva_single(numeroReserva):
+            #print(numeroReserva)
+            output = []
+            reserva = Reserva.query.get(numeroReserva)
+            #print(Reserva.query.get(numeroReserva))
+            salida = {}
+            salida['num_reserva'] = reserva.num_reserva
+            salida['data_in'] = reserva.data_in
+            salida['data_out'] = reserva.data_out
+            salida['diferenca'] = abs((reserva.data_in - reserva.data_out).days)
+            salida['id_cliente'] = reserva.id_cliente
+            salida['nome'] = Cliente.query.get(reserva.id_cliente).nome
+            salida['id_hab'] = Hab_res.consultar_hab(numeroReserva)
+            #salida ['id_hab'] = Hab_res.query.filter_by(numeroReserva=num_res).id_hab
+            #salida['habitacao'] = 102
+            output.append(salida)
+            return output
 
     @staticmethod
-    def update(data_in, data_out):
-        data_in = data_in
-        data_out = data_out
+    def actualizar_reserva_single(numeroReserva):
+            #print(numeroReserva)
+            output = []
+            reserva = Reserva.query.get(numeroReserva)
+            #print(Reserva.query.get(numeroReserva))
+            salida = {}
+            salida['data_in'] = reserva.data_in
+            salida['data_out'] = reserva.data_out
+            output.append(salida)
+            return output
+
+    
+    def update(self,  data_in, data_out):
+        self.data_in = data_in
+        self.data_out = data_out
+        self.save()
+
+   
+    def save(self): # função que salva as novas informações no banco de dados
+        db.session.add(self) # adiciona o novo registro através da session ao DB
+        db.session.commit()
 
 
 #-----------------------------------------------  Casse Hab_Res -------------------------------------------------
 
-class hab_res(db.Model):
+class Hab_res(db.Model):
     __tablename__= "hab_res"
     num_res = db.Column(db.Integer, nullable=False)
     id_hab = db.Column(db.Integer, nullable=False)
     data_res = db.Column(db.Date, nullable=False)
-    id_hotel = db.Column(db.Integer, nullable=False)) 
+    id_hotel = db.Column(db.Integer, nullable=False )
+    id_num_res = db.Column(db.Integer, primary_key=True)
 
 
     def __init__(self,num_res,id_hab,data_res,id_hotel): 
@@ -80,32 +127,18 @@ class hab_res(db.Model):
         self.data_res = data_res
         self.id_hotel = id_hotel
 
-
     @staticmethod
-    def hab_res_read_all():
-         # SELECT * from filmes ORDER BY id ASC
-         all_habitacao = Habitacao.query.order_by(Habitacao.id_hab.asc()).all()
-         output = []
-         for habitacao in all_habitacao:   
-             if (habitacao.id_hotel == 1):
-                 salida = {}
-                 salida['id_hab'] = habitacao.id_hab
-                 salida['numero'] = habitacao.numero
-                 salida['valor'] = habitacao.valor
-                 salida['capacidade'] = habitacao.capacidade
-                 salida['categoria'] = habitacao.categoria
-                 salida['id_hotel'] =habitacao.id_hotel
-                 salida['estado'] =habitacao.estado
-                 output.append(salida)
-         return output
+    def consultar_hab(numeroReserva):
+         all_habitacao = Hab_res.query.order_by(Hab_res.id_num_res.asc()).all()
+         for habitacao in all_habitacao:  
+            if (habitacao.num_res == numeroReserva):
+                return habitacao.id_hab
+        
 
 
-    @staticmethod
-    def habitacao_id_hotel(id_hotel):
-        return Habitacao.query.get(id_hotel)
 
 
-#-----------------------------------------------  Casse Habitacao -------------------------------------------------
+#-----------------------------------------------  Clase Habitacao -------------------------------------------------
 
 class Habitacao(db.Model):
     __tablename__= "habitacao"
@@ -148,41 +181,62 @@ class Habitacao(db.Model):
     def habitacao_id_hotel(id_hotel):
         return Habitacao.query.get(id_hotel)
 
-#-----------------------------------------------  Casse Cliente -------------------------------------------------
+#-----------------------------------------------  Clase Cliente -------------------------------------------------
 
-class Clienteo(db.Model):
-    __tablename__= "Cliente"
+class Cliente(db.Model):
+    __tablename__= "cliente"
     id_cliente = db.Column(db.Integer, primary_key=True)
-    documento = db.Column(db.Integer, nullable=False)
-    tipo = db.Column(db.Integer, nullable=False)
-    nome = db.Column(db.Integer, nullable=False)
-    sobrenomea = db.Column(db.String(255), nullable=False) 
+    documento = db.Column(db.Integer)
+    tipo = db.Column(db.String(255))
+    nome = db.Column(db.String(255), nullable=False)
+    sobrenome = db.Column(db.String(255), nullable=False) 
     telefone = db.Column(db.Integer, nullable=False)
-    estado = db.Column(db.Boolean, nullable=False)
+    endereco = db.Column(db.String(255))
+    saldo = db.Column(db.Integer, nullable=False)
+    id_hotel = db.Column(db.Integer, nullable=False)
+    procedencia = db.Column(db.String(255))
+    vip = db.Column(db.Boolean)
 
-    def __init__(self,numero,valor,capacidade,categoria,id_hotel,estado): 
-        self.numero = numero
-        self.valor = valor
-        self.capacidade = capacidade
-        self.categoria = categoria
+    def __init__(self,documento,tipo,nome,sobrenome,telefone,endereco, saldo, id_hotel, procedencia): 
+        self.documento = documento
+        self.tipo = tipo
+        self.nome = nome
+        self.sobrenome = sobrenome
+        self.telefone = telefone
+        self.endereco = endereco
+        self.saldo = saldo
         self.id_hotel = id_hotel
-        self.estado = estado
+        self.procedencia = procedencia
+
 
     @staticmethod
-    def habitacao_read_all():
+    def cliente_read_nome(id_cliente):
          # SELECT * from filmes ORDER BY id ASC
-         all_habitacao = Habitacao.query.order_by(Habitacao.id_hab.asc()).all()
+         all_nomes = Cliente.query.order_by(Cliente.id_cliente.asc()).all()
          output = []
-         for habitacao in all_habitacao:   
-             if (habitacao.id_hotel == 1):
+         for nomes in all_nomes:  
+             if (nomes.id_cliente == id_cliente): 
                  salida = {}
-                 salida['id_hab'] = habitacao.id_hab
-                 salida['numero'] = habitacao.numero
-                 salida['valor'] = habitacao.valor
-                 salida['capacidade'] = habitacao.capacidade
-                 salida['categoria'] = habitacao.categoria
-                 salida['id_hotel'] =habitacao.id_hotel
-                 salida['estado'] =habitacao.estado
+                 salida['nome'] = nomes.nome
+                 output.append(salida)
+         return output
+
+    @staticmethod
+    def cliente_all():
+         # SELECT * from filmes ORDER BY id ASC
+         all_cliente = Cliente.query.order_by(Cliente.id_cliente.asc()).all()
+         output = []
+         for cliente in all_cliente:  
+                 salida = {}
+                 salida['id_cliente'] = cliente.id_cliente
+                 salida['documento'] = cliente.documento
+                 salida['tipo'] = cliente.tipo
+                 salida['nome'] = cliente.nome
+                 salida['sobrenome'] = cliente.sobrenome
+                 salida['telefone'] = cliente.telefone
+                 salida['saldo'] = cliente.saldo
+                 salida['id_hotel'] = cliente.id_hotel
+                 salida['procedencia'] = cliente.procedencia
                  output.append(salida)
          return output
 
@@ -192,7 +246,7 @@ class Clienteo(db.Model):
         return Habitacao.query.get(id_hotel)
 
 
-#-----------------------------------------------  Casse Hotel -------------------------------------------------
+#-----------------------------------------------  Clase Hotel -------------------------------------------------
 #Modelar a Classe Hotel -> tabela hotel
 
 class Hotel(db.Model):
@@ -217,7 +271,6 @@ class Hotel(db.Model):
 
 @app.route('/')
 def principal():
-    tiempo=time.asctime()
     return render_template('index.html')
 
 #----------------------------------------------- MENU DE RECEPÇÃO -----------------------------------------------------
@@ -248,16 +301,63 @@ def menu_faturacao():
     
 #-----------------------------------------------MENU DE RESERVAS  -----------------------------------------------------
 
-@app.route("/menu_reserva/consultar_reserva")
+@app.route("/menu_reserva/consultar_reserva", methods=['GET','POST'])
 def consultar_reserva():
-        #return render_template("menu_quartos.html")
-    #registros = Habitacao.habitacao_id_hotel(1)
     registros = Reserva.reserva_read_all()
-    #Chama do método read_all da classe filmes, que representa a tabela filmes do banco de dados.
-    return render_template("reserva_read_all.html", registros=registros)
+    return render_template("consultar_reserva.html", registros=registros)
+
 
 @app.route("/menu_reserva/nova_reserva", methods=['GET','POST'])
 def nova_reserva():
+    novo_id = None
+    novo_id2 = None
+    novo_id3 = None
+    if (request.method == 'POST'):
+        form = request.form
+        crear_reserva = Reserva(num_reserva=form['num_reserva'], data_in=form['data_in'], data_out=form['data_out'], id_cliente=form['id_cliente'])
+        db.session.add(crear_reserva)
+        db.session.commit()
+        data_hoje = date.today()
+        crear_res_hab = Hab_res(num_res= form['num_reserva'], id_hab=form['id_hab'] ,data_res= data_hoje, id_hotel=1)
+        db.session.add(crear_res_hab)
+        db.session.commit()
+        novo_id = crear_reserva.num_reserva
+        novo_id2 = crear_reserva.data_in
+        novo_id3 = crear_reserva.data_out
+    return render_template("nova_reserva.html", novo_id=novo_id, novo_id2=novo_id2, novo_id3=novo_id3)
+
+
+@app.route("/menu_reserva/apagar_reserva/<numeroReserva>", methods=['GET','POST'])
+def apagar_reserva(numeroReserva):
+    if request.method == 'POST':
+        reserva = Reserva.read_id(numeroReserva)
+        Reserva.delete()
+    return render_template("apagar_reserva.html")
+
+@app.route("/menu_reserva/alterar_reserva/<numeroReserva>", methods=['GET','POST'])
+def alterar_reserva(numeroReserva):
+    reserva = Reserva.actualizar_reserva_single(numeroReserva)
+    if request.method == 'POST':
+        form = request.form 
+        Reserva.update(data_in=form['data_in'],data_out=form['data_out'])
+
+    return render_template("alterar_reserva.html")
+
+@app.route('/menu_reserva/<num_reserva>', methods=['GET','POST'])
+def ver_reserva(num_reserva):
+    registro = Reserva.consultar_reserva_single(num_reserva)
+    return render_template("ver_reserva.html", registro=registro)
+
+
+#-----------------------------------------------MENU DE CLIENTES  -----------------------------------------------------
+
+@app.route("/consultar_clientes", methods=['GET','POST'])
+def listar_clientes():
+    registros = Cliente.cliente_all()
+    return render_template("consultar_clientes.html", registros=registros)
+
+@app.route("/menu_reserva/novo_cliente", methods=['GET','POST'])
+def novo_cliente():
     novo_id = None
     novo_id2 = None
     novo_id3 = None
@@ -272,21 +372,22 @@ def nova_reserva():
         novo_id2 = crear_reserva.data_in
         novo_id3 = crear_reserva.data_out
 
-    return render_template("nova_reserva.html", novo_id=novo_id, novo_id2=novo_id2, novo_id3=novo_id3)
+    return render_template("novo_cliente.html", novo_id=novo_id, novo_id2=novo_id2, novo_id3=novo_id3)
 
-@app.route("/menu_reserva/apagar_reserva/<numeroReserva>", methods=['GET','POST'])
-def apagar_reserva(numeroReserva):
+@app.route("/menu_reserva/apagar_cliente/<numeroReserva>", methods=['GET','POST'])
+def apagar_cliente(numeroReserva):
     if request.method == 'POST':
         reserva = Reserva.read_id(numeroReserva)
         Reserva.delete()
     return render_template("apagar_reserva.html")
 
-@app.route("/menu_reserva/alterar_reserva/<numeroReserva>", methods=['GET','POST'])
-def alterar_reserva(numeroReserva):
+@app.route("/menu_reserva/alterar_cliente/<numeroReserva>", methods=['GET','POST'])
+def alterar_cliente(numeroReserva):
     if request.method == 'POST':
         form = request.form 
-        reserva = Reserva.read_id(numeroReserva)
-        Reserva.update( data_in= form['data_in'], data_out= form['data_out'])
+        reseva = Reserva.read_id(numeroReserva)
+        reseva.update( data_in= form['data_in'], data_out= form['data_out'])
+
 
     return render_template("alterar_reserva.html")
 
