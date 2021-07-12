@@ -17,18 +17,24 @@
                 <td>Chack in</td>
                 <td>Check out</td>
                 <td>Quantidade de dias</td>
-                <td>Nome Cliente</td>
-                <td>Habitação</td>
+                <td>Custo por dia</td>
+                <td>Custo total</td>
+                <td>Nome do Cliente</td>
+                <td>N° de Habitação</td>
+                <td>Categoria</td>
 
             </tr>
             <tr>
-                {% for registro in registro %}
+                
                 <td>{{ registro["num_reserva"] }}</td>
                 <td>{{ registro["data_in"] }}</td>
                 <td>{{ registro["data_out"] }}</td>
                 <td>{{ registro["diferenca"] }} dias</td>
+                <td>R${{ registro["valor_u"] }}</td>
+                <td>R${{ registro["valor_t"] }}</td>
                 <td>{{ registro["nome"] }}</td>
-                <td>{{ registro["id_hab"] }}</td>
+                <td>{{ registro["num_hab"] }}</td>
+                <td>{{ registro["categoria"] }}</td>
             </tr>
                 
          </table>
@@ -38,6 +44,6 @@
         <a href="/menu_reserva//apagar_reserva/{{ registro['num_reserva'] }}" class="botao_r">Apagar</a>
         <a href="/menu_reserva/consultar_reserva" class="botao_v">Voltar</a>
     </div>
-    {% endfor %}
+   
 </body>
 </html>

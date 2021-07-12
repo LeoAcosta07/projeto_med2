@@ -62,10 +62,6 @@ class Reserva(db.Model):
             output.append(salida)
         return output
 
-    @staticmethod
-    def delete():
-        db.session.delete()
-        db.session.commit()
     
     @staticmethod
     def consultar_reserva_single(numeroReserva):
@@ -81,10 +77,14 @@ class Reserva(db.Model):
             salida['id_cliente'] = reserva.id_cliente
             salida['nome'] = Cliente.query.get(reserva.id_cliente).nome
             salida['id_hab'] = Hab_res.consultar_hab(numeroReserva)
+            salida['num_hab'] = Habitacao.habitacao_numero(salida['id_hab'])
+            salida['categoria'] = Habitacao.habitacao_categoria(salida['id_hab'])
+            salida['valor_u'] = Habitacao.habitacao_preco(salida['id_hab']).valor
+            salida['valor_t'] = ((salida['valor_u'])*(salida['diferenca']))
             #salida ['id_hab'] = Hab_res.query.filter_by(numeroReserva=num_res).id_hab
             #salida['habitacao'] = 102
             output.append(salida)
-            return output
+            return salida
 
     @staticmethod
     def actualizar_reserva_single(numeroReserva):
@@ -98,16 +98,20 @@ class Reserva(db.Model):
             output.append(salida)
             return output
 
+    @staticmethod
+    def reserva_read_single(id_registro):
+        return Reserva.query.get(id_registro)
     
-    def update(self,  data_in, data_out):
+    def update(self, data_in, data_out):
         self.data_in = data_in
         self.data_out = data_out
-        self.save()
-
-   
-    def save(self): # função que salva as novas informações no banco de dados
         db.session.add(self) # adiciona o novo registro através da session ao DB
-        db.session.commit()
+        db.session.commit()        
+        #self.save()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()        
 
 
 #-----------------------------------------------  Casse Hab_Res -------------------------------------------------
@@ -131,8 +135,24 @@ class Hab_res(db.Model):
     def consultar_hab(numeroReserva):
          all_habitacao = Hab_res.query.order_by(Hab_res.id_num_res.asc()).all()
          for habitacao in all_habitacao:  
-            if (habitacao.num_res == numeroReserva):
+            if (str(habitacao.num_res) == numeroReserva):
                 return habitacao.id_hab
+
+    @staticmethod
+    def consultar_id(numeroReserva):
+         all_habitacao = Hab_res.query.order_by(Hab_res.id_num_res.asc()).all()
+         for habitacao in all_habitacao:  
+            if (str(habitacao.num_res) == numeroReserva):
+                return habitacao.id_num_res
+    
+    @staticmethod
+    def hab_res_read_single(id_num_res):
+        return Hab_res.query.get(id_num_res)
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit() 
+   
         
 
 
@@ -180,6 +200,18 @@ class Habitacao(db.Model):
     @staticmethod
     def habitacao_id_hotel(id_hotel):
         return Habitacao.query.get(id_hotel)
+
+    @staticmethod
+    def habitacao_numero(id_hab):
+        return Habitacao.query.get(id_hab).numero
+
+    @staticmethod
+    def habitacao_categoria(id_hab):
+        return Habitacao.query.get(id_hab).categoria
+
+    @staticmethod
+    def habitacao_preco(id_hab):
+        return Habitacao.query.get(id_hab)
 
 #-----------------------------------------------  Clase Cliente -------------------------------------------------
 
@@ -329,19 +361,24 @@ def nova_reserva():
 
 @app.route("/menu_reserva/apagar_reserva/<numeroReserva>", methods=['GET','POST'])
 def apagar_reserva(numeroReserva):
-    if request.method == 'POST':
-        reserva = Reserva.read_id(numeroReserva)
-        Reserva.delete()
+    apaga_reserva = Reserva.consultar_reserva_single(numeroReserva)
+
+    id_hab_res = Hab_res.consultar_id(numeroReserva)
+
+    apaga_hab_res = Hab_res.hab_res_read_single(id_hab_res)
+    apaga_hab_res.delete()
+    apaga_reserva = Reserva.reserva_read_single(numeroReserva)
+    apaga_reserva.delete()
     return render_template("apagar_reserva.html")
 
 @app.route("/menu_reserva/alterar_reserva/<numeroReserva>", methods=['GET','POST'])
 def alterar_reserva(numeroReserva):
-    reserva = Reserva.actualizar_reserva_single(numeroReserva)
+    registro = Reserva.consultar_reserva_single(numeroReserva)
+    altera = Reserva.reserva_read_single(numeroReserva)
     if request.method == 'POST':
-        form = request.form 
-        Reserva.update(data_in=form['data_in'],data_out=form['data_out'])
-
-    return render_template("alterar_reserva.html")
+        form = request.form
+        altera.update(data_in=form['data_in'], data_out=form['data_out'])
+    return render_template("alterar_reserva.html", registro=registro, altera=altera)
 
 @app.route('/menu_reserva/<num_reserva>', methods=['GET','POST'])
 def ver_reserva(num_reserva):
@@ -378,7 +415,6 @@ def novo_cliente():
 def apagar_cliente(numeroReserva):
     if request.method == 'POST':
         reserva = Reserva.read_id(numeroReserva)
-        Reserva.delete()
     return render_template("apagar_reserva.html")
 
 @app.route("/menu_reserva/alterar_cliente/<numeroReserva>", methods=['GET','POST'])

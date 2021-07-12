@@ -9,16 +9,24 @@
 </head>
     <body>
         {% include 'header.html' %}
-        <h1 class="bloco">Alterar data da Reserva!</h1>
+        
+        <div class="bloco_m">
+            
+            <h2> Alterar a data da reserva n° <span class="novo_id">{{ registro["num_reserva"] }}</span> </h2>
+            
+        </div>
+    
+        <div class="bloco">
         <form action="" method="POST">
             <label for="data_in">Data de Check-in:</label>
-            <input type="date" name="data_in" id="data_in"> <br><br>
+            <input type="date" name="data_in" id="data_in" value="{{ registro.data_in }}" > <br><br>
             <label for="data_out">Data de Check-out:</label>
-            <input type="date" name="data_out" id="data_out"><br> <br>
-            <input class="botao" type="submit" value="Enviar Dados">
+            <input type="date" name="data_out" id="data_out" value="{{ registro.data_out }}"><br> <br>
+            <input class="botao" type="submit" value="Confirmar">
         </form>
+        </div>
         <div class="bloco">
-            <a href="/menu_recep" class="botao_v" >Voltar</a>
+            <a href="/menu_reserva/consultar_reserva" class="botao_v" >Voltar</a>
         </div>
 </body>
 </html>
