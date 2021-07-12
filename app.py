@@ -7,14 +7,14 @@ app = Flask(__name__)
 
 
 #Configuracoes de acceso ao banco de dados
-user = 'nzygbpdp'
-password = 'lqxrDV6TMksZJl5ZoSbWji9PD0hETYGB'
-host = 'tuffi.db.elephantsql.com'
-database = 'nzygbpdp'
+user='nzygbpdp'
+password='lqxrDV6TMksZJl5ZoSbWji9PD0hETYGB'
+host='tuffi.db.elephantsql.com'
+database='nzygbpdp'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{user}:{password}@{host}/{database}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = "pepe pepe pepe"
+app.secret_key ="pepe pepe pepe"
 
 #Intanciando objeto da Classe SQLAlchemy 
 db = SQLAlchemy(app)
