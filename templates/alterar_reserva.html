@@ -9,6 +9,8 @@
 </head>
     <body>
         {% include 'header.html' %}
+
+        {% if not sucesso %}
         
         <div class="bloco_m">
             
@@ -26,7 +28,20 @@
         </form>
         </div>
         <div class="bloco">
-            <a href="/menu_reserva/consultar_reserva" class="botao_v" >Voltar</a>
+            <a href="/menu_reserva/{{ registro.num_reserva }}" class="botao_v" >Voltar</a>
         </div>
+        
+        {% else %}
+
+        <div class="bloco sucesso">
+            <p>
+                Reserva modificada com sucesso!
+            </p>
+        </div>
+        <div class="bloco">
+            <a href="/menu_reserva" class="botao" >Regresar a menu reservas</a>
+        </div>
+
+        {% endif %}
 </body>
 </html>

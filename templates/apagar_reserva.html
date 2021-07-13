@@ -9,15 +9,32 @@
 </head>
     <body>
         {% include 'header.html' %}
-        <h1 class="bloco" style="color: red;">Tem certeza que deseja apagar essa reserva?</h1>
-        <form action="" method="POST">
-            <label for="apagar"></label> <br>
-            <input type="radio" name="apagar" id="apagar"> Sim
-            <input type="radio" name="apagar" id="apagar"> Não <br> <br> <br>
-            <input class="botao" type="submit" value="Confirmar" style="text-align: center;">
-        </form>
-        <div class="bloco">
-            <a href="/menu_recep" class="botao_v" >Voltar</a>
+
+        {% if sucesso %}
+
+        <div class="bloco removido">
+            <p>
+            Registro removido com sucesso!
+            </p>
         </div>
+
+        <div class="bloco">
+            <a href="/menu_reserva" class="botao">Visualizar Reservas</a>
+        </div>
+        {% else %}
+            <div class="bloco">
+                <h2 class="bloco" style="color: red;">Tem certeza que deseja apagar a reserva: n°<span class="novo_id"> {{ apaga_reserva.num_reserva }}</span>?</h2>
+                    <br/><br/></div>
+                    <div class="bloco">
+                    <a href="/menu_reserva/apagar_reserva/{{ apaga_reserva.num_reserva }}/confirmed" class="botao_r">Apagar</a>
+                    <a href="/menu_reserva/{{ apaga_reserva.num_reserva }}" class="botao">Cancelar</a>
+                    
+                </p>
+            </div>
+        
+        <div class="bloco">
+            <a href="/menu_reserva/{{ apaga_reserva.num_reserva }}" class="botao_v" >Voltar</a>
+        </div>
+        {% endif %}
 </body>
 </html>

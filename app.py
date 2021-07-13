@@ -344,41 +344,58 @@ def nova_reserva():
     novo_id = None
     novo_id2 = None
     novo_id3 = None
+    lista_hab = Habitacao.habitacao_read_all()
     if (request.method == 'POST'):
         form = request.form
         crear_reserva = Reserva(num_reserva=form['num_reserva'], data_in=form['data_in'], data_out=form['data_out'], id_cliente=form['id_cliente'])
-        db.session.add(crear_reserva)
-        db.session.commit()
+        #db.session.add(crear_reserva)
+        #db.session.commit()
         data_hoje = date.today()
+        hab = form['id_hab']
+        print(hab)
         crear_res_hab = Hab_res(num_res= form['num_reserva'], id_hab=form['id_hab'] ,data_res= data_hoje, id_hotel=1)
-        db.session.add(crear_res_hab)
-        db.session.commit()
+        #db.session.add(crear_res_hab)
+        #db.session.commit()
         novo_id = crear_reserva.num_reserva
         novo_id2 = crear_reserva.data_in
         novo_id3 = crear_reserva.data_out
-    return render_template("nova_reserva.html", novo_id=novo_id, novo_id2=novo_id2, novo_id3=novo_id3)
+    return render_template("nova_reserva.html", novo_id=novo_id, novo_id2=novo_id2, novo_id3=novo_id3, lista_hab=lista_hab)
 
 
-@app.route("/menu_reserva/apagar_reserva/<numeroReserva>", methods=['GET','POST'])
-def apagar_reserva(numeroReserva):
+@app.route("/menu_reserva/apagar_reserva/<numeroReserva>/confirmed", methods=['GET','POST'])
+def apagar_reserva2(numeroReserva):
+    sucesso = False 
     apaga_reserva = Reserva.consultar_reserva_single(numeroReserva)
 
     id_hab_res = Hab_res.consultar_id(numeroReserva)
 
     apaga_hab_res = Hab_res.hab_res_read_single(id_hab_res)
-    apaga_hab_res.delete()
-    apaga_reserva = Reserva.reserva_read_single(numeroReserva)
-    apaga_reserva.delete()
-    return render_template("apagar_reserva.html")
+    if apaga_hab_res:
+        apaga_hab_res.delete()
+        apaga_reserva = Reserva.reserva_read_single(numeroReserva)
+        if apaga_reserva:
+            apaga_reserva.delete()
+            sucesso = True      
+    return render_template("apagar_reserva.html", apaga_reserva=apaga_reserva, apaga_hab_res=apaga_hab_res, sucesso=sucesso)
+
+@app.route("/menu_reserva/apagar_reserva/<numeroReserva>", methods=['GET','POST'])
+def apagar_reserva1(numeroReserva):
+    apaga_reserva = Reserva.consultar_reserva_single(numeroReserva)
+    id_hab_res = Hab_res.consultar_id(numeroReserva)
+    apaga_hab_res = Hab_res.hab_res_read_single(id_hab_res)
+    #apaga_reserva = Reserva.reserva_read_single(numeroReserva)
+    return render_template("apagar_reserva.html", apaga_reserva=apaga_reserva, apaga_hab_res=apaga_hab_res)
 
 @app.route("/menu_reserva/alterar_reserva/<numeroReserva>", methods=['GET','POST'])
 def alterar_reserva(numeroReserva):
+    sucesso = False
     registro = Reserva.consultar_reserva_single(numeroReserva)
     altera = Reserva.reserva_read_single(numeroReserva)
     if request.method == 'POST':
         form = request.form
         altera.update(data_in=form['data_in'], data_out=form['data_out'])
-    return render_template("alterar_reserva.html", registro=registro, altera=altera)
+        sucesso = True
+    return render_template("alterar_reserva.html", registro=registro, altera=altera, sucesso=sucesso)
 
 @app.route('/menu_reserva/<num_reserva>', methods=['GET','POST'])
 def ver_reserva(num_reserva):

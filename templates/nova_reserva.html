@@ -31,8 +31,14 @@
                 </div><br><br>
                 <div class="bloco form_input">
                     <label class="bloco_m" for="id_hab">Numero de habitacao:</label>
-                    <input type="text"  name="id_hab" id="id_hab"> 
-                </div>
+                    <select name="lista_habitacao">
+                        {% for lista_hab in lista_hab %}
+                        <option class="bloco_m" name="id_hab" id="id_hab" value="{{ lista_hab.id_hab }}">{{ lista_hab.numero }}</option> 
+                        {% endfor %}
+                     </select>
+                    
+
+                </div><br><br><br>
                 <div class="bloco form_input">
                     <label class="bloco_m" for="id_cliente">Id de cliente:</label>
                     <input type="text"  name="id_cliente" id="id_cliente"> 
@@ -48,7 +54,7 @@
             <a href="/menu_recep" class="botao_v" >Voltar</a>
         </div>
     
-        {% else %}
+    {% else %}
     
         <div class="bloco">
             <p>
@@ -58,6 +64,6 @@
             </p>
         </div>
     
-        {% endif %}
+    {% endif %}
 </body>
 </html>
