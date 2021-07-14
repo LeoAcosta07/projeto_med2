@@ -305,6 +305,10 @@ class Hotel(db.Model):
 def principal():
     return render_template('index.html')
 
+@app.route("/favicon.ico")
+def principal2():
+    return render_template('index.html')
+
 #----------------------------------------------- MENU DE RECEPÇÃO -----------------------------------------------------
 
 @app.route("/menu_recep")
